@@ -22,8 +22,12 @@
       name="minRating" 
       placeholder="Enter minimum rating (0-10)" 
       min="0"
-      max="10">
-
+      max="10"
+      required>
+      <div *ngIf="minRating < 0 || minRating > 10" class="error-message">
+        <p *ngIf="minRating < 0">Rating cannot be less than 0.</p>
+        <p *ngIf="minRating > 10">Rating cannot be more than 10.</p>
+      </div>
     <button type="submit" [disabled]="searchForm.invalid">Search</button>
   </form>
   <div *ngIf="loading" class="loading-spinner"></div>
