@@ -1,0 +1,62 @@
+<div class="movie-search-container">
+  <h1>Movie Search</h1>
+  <form (ngSubmit)="onSearchMovie()" #searchForm="ngForm">
+    <input 
+      type="text" 
+      [(ngModel)]="movieTitle" 
+      name="movieTitle" 
+      placeholder="Enter movie title" 
+      required
+      minlength="2"
+      #movieTitleInput="ngModel">
+
+    <div *ngIf="movieTitleInput.invalid && (movieTitleInput.dirty || movieTitleInput.touched)" class="error-message">
+      <p *ngIf="movieTitleInput.errors?.['required']">Movie title is required.</p>
+      <p *ngIf="movieTitleInput.errors?.['minlength']">Movie title must be at least 2 characters long.</p>
+    </div>
+
+    
+    <input 
+      type="number" 
+      [(ngModel)]="minRating" 
+      name="minRating" 
+      placeholder="Enter minimum rating (0-10)" 
+      min="0"
+      max="10">
+
+    <button type="submit" [disabled]="searchForm.invalid">Search</button>
+  </form>
+  <div *ngIf="loading" class="loading-spinner"></div>
+  
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+ 
+  <div *ngIf="movie && !errorMessage" class="movie-info">
+    <h2>{{ movie.Title }} ({{ movie.Year }})</h2>
+    <p><strong>Rating:</strong> {{ movie.imdbRating }}</p>
+    <p><strong>Duration:</strong> {{ movie.Runtime }}</p>
+    <p><strong>Director:</strong> {{ movie.Director }}</p>
+    <p><strong>Actors:</strong> {{ movie.Actors }}</p>
+    <p><strong>Description:</strong> {{ movie.Plot }}</p>
+
+    <div class="tv-frame">
+      <img [src]="movie.Poster" alt="{{ movie.Title }}">
+    </div>
+
+    
+    <button class="favorite-btn" (click)="addToFavorites()" *ngIf="!isFavorite(movie)">Add to Favorites</button>
+   
+<button class="favorite-btn remove" (click)="removeFromFavorites(movie)" *ngIf="isFavorite(movie)">Remove from Favorites</button>
+  
+
+  
+  <div *ngIf="favoriteMovies.length > 0" class="favorites-list">
+    <h3>Your Favorite Movies</h3>
+    <ul>
+      <li *ngFor="let fav of favoriteMovies">
+        <h4>{{ fav.Title }} ({{ fav.Year }})</h4>
+        <button class="favorite-btn remove" (click)="removeFromFavorites(fav)">Remove</button>
+      </li>
+    </ul>
+  </div>
